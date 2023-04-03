@@ -2,34 +2,39 @@ document.getElementById("back").addEventListener("click", () => {
     window.location.href = "userlist.html";
 });
 
-
+//add userlist
 const myForm = document.querySelector('#form');
-
 myForm.addEventListener('submit', async function (e) {
     e.preventDefault();
 
     const formData = new FormData(myForm);
-    for (item of formData) {
-        console.log(item[0], item[1]);
+    //const searchParams = new URLSearchParams(formData);
+    //for (const item of formData) {
+    //  console.log(item[0], item[1]);
 
-    };
-    await fetch("https://gorest.co.in/public/v2/users?page=1&per_page=100/access-token=6fbc5335a94e219c3fe34054208499393e999e24ea261d4341aa0726dab9b430",
-        {
-            method: "POST",
-            body: "formData",
-            headers: {
-                "content-type": "application/json;json; charset=UTF-8",
-                "Authorization": "Bearer",
-            }
+    //}
 
-        }).then(res => res.json())
-          .then(data => {console.log(data)
-           //window.location.href = "userlist.html";
-        })
+    //console.log(Object.fromEntries(formData));
+
+    await fetch("https://gorest.co.in//public/v2/users?access-token=835dc2e45b78886994de04f0235ccab1691464428e09811304972c0467d89473", {
 
 
-    // .catch(error => console.log(error));
+        method: "POST",
 
+        headers: {
+            "content-type": "application/json;json; charset=UTF-8",
+            "authorization": "Bearer token"
 
+        },
+        body: JSON.stringify(Object.fromEntries(formData)),
 
+    }).then(res => res.json())
+        .then(data => console.log(data))
+         
+        .catch(error => console.log(error));
+        window.location.href = "userlist.html";
 })
+
+
+
+

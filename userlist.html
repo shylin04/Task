@@ -10,40 +10,49 @@
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
-
-
+  
   <script defer src="https://code.jquery.com/jquery-3.5.1.js"></script>
   <script defer src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
   <script defer src="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.js"></script>
- 
+
+  
+
 
   <title>user list</title>
   <script src="https://kit.fontawesome.com/43dea8f05c.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
-  <div class="conatainer p-3 border">
-    <h1 class="fs-4">User list</h1>
+  
+      <div class="conatainer m-3">
 
-    <button type="submit" class="btn btn-primary float-end  m-3" id="add-user" style="width:100px">Add user</button>
-    <table id="table" class="table table-striped table-bordered mt-5">
 
-      <thead>
-        <tr>
-          <th class="bg-dark text-light">Name</th>
-          <th class="bg-dark text-light">Id</th>
-          <th class="bg-dark text-light">Gender</th>
-          <th class="bg-dark text-light">Email</th>
-          <th class="bg-dark text-light">Status</th>
-          <th class="bg-dark text-light">Action</th>
-        </tr>
-      </thead>
-      <tbody id="table-body">
-      </tbody>
-    </table>
-    
-  </div>
-  <script src="./userlist.js"  ></script>
+        <h1 class="fs-4">User list</h1>
+
+        <button type="submit" class="btn btn-primary float-end  m-3" id="add-user" style="width:100px">Add user</button>
+       
+       <!-- <input class="search-input ml-5 mt-4" id="search" type="search" placeholder="search" style="float: right" > -->
+       <!-- <label  class="search mt-4"style="float: right">search:</label> -->
+        <table id="table" class="table table-striped table-bordered mt-5">
+
+          <thead>
+            <tr>
+              <th class="bg-dark text-light">Name</th>
+              <th class="bg-dark text-light">Id</th>
+              <th class="bg-dark text-light">Gender</th>
+              <th class="bg-dark text-light">Email</th>
+              <th class="bg-dark text-light">Status</th>
+              <th class="bg-dark text-light">Action</th>
+            </tr>
+          </thead>
+          <tbody id="table-body">
+            
+          </tbody>
+        </table>
+        
+      </div>
+    </div>
+    <script src="./userlist.js"></script>
 </body>
 
 

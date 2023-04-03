@@ -3,14 +3,21 @@ document.getElementById("add-user").addEventListener("click", () => {
 });
 
 // users list
-fetch("https://gorest.co.in/public/v2/users")
+fetch("https://gorest.co.in//public/v2/users?access-token=835dc2e45b78886994de04f0235ccab1691464428e09811304972c0467d89473", {
+  method: 'GET',
+  headers: {
+    "content-type": "application/json;json; charset=UTF-8",
+    "Authorization": "Bearer token",
+  }
+
+})
   .then((data) => {
 
     return (data.json());
   }).then((objectData) => {
     let tableData = "";
     objectData.map((values) => {
-      tableData += `<tr>
+      tableData += `<tr id="${values.id}">
        <td>${values.name}</td>
        <td>${values.id}</td>
        <td>${values.gender}</td>
@@ -20,9 +27,9 @@ fetch("https://gorest.co.in/public/v2/users")
        
      
       <td>
-      <a href="view"id="view" class="view"><i class="fa-solid fa-eye"></i></a>
-      <a href="edit" id="edit"class="edit"style="padding-left:15px";> <i class="fa-solid fa-pen"></i></a>
-       <a href="delete"id="delete" class="delete" style="padding-left:15px ;color:red;"><i class="fa-solid fa-trash"></i></a></td>
+      <a id="view"  style="color:blue;" ><i class="fa-solid fa-eye"></i></a>
+      <a id="edit" onclick="onEdit(this)" style="padding-left:15px;color:blue;"> <i class="fa-solid fa-pen"></i></a>
+      <a id="delete" onclick="onDelete(this)" style="padding-left:15px ;color:red;"><i class="fa-solid fa-trash"></i></a></td>
      </tr>`;
     });
     document.getElementById("table-body").innerHTML = tableData;
@@ -34,33 +41,97 @@ fetch("https://gorest.co.in/public/v2/users")
 
 
 
- 
 
-// delete
-  document.querySelector('a.delete').addEventListener('click', (e) => {
-  e.preventDefault();
 
-  const id = document.getElementById('delete').this.id
+//delete
 
- 
-   fetch("https://gorest.co.in/public/v2/users?/"+id+"access-token=6fbc5335a94e219c3fe34054208499393e999e24ea261d4341aa0726dab9b430/",
-    {
-      method: "DELETE",
-      headers: {
-        "content-type": "application/json;json; charset=UTF-8",
-        "Authorization": "Bearer",
+function onDelete(tr) {
+
+  const id = tr.parentElement.parentElement.id;
+  console.log(id);
+
+  fetch(`https://gorest.co.in//public/v2/users/${id}`, {
+    method: "DELETE",
+
+    headers: {
+      "content-type": "application/json;json; charset=UTF-8",
+      "authorization": "Bearer 835dc2e45b78886994de04f0235ccab1691464428e09811304972c0467d89473"
+
+    }
+  })
+    .then(response => {
+      if (response.ok) {
+        alert(" userlist deleted successfully");
+      } else {
+        throw new Error("Failed to delete data.");
       }
+    })
 
-    }).then(res => res.json())
-    .then(data => console.log(data))
+    .catch(error => {
+      console.error(error);
+    });
+  document.getElementById("table-body").deleteRow(tr.parentElement.parentElement.rowIndex);
+
+  }
+
+//edit
+function onEdit(td) {
+  const id = td.parentElement.parentElement.id;
 
 
-})
+  fetch(`https://gorest.co.in//public/v2/users/${id}`, {
+    method: "PUT",
+    headers: {
+      "content-type": "application/json;json; charset=UTF-8",
+      "authorization": "Bearer 835dc2e45b78886994de04f0235ccab1691464428e09811304972c0467d89473"
+
+    }
+
+  })
+    .then(response => {
+      if (response.ok) {
 
 
-//update using PUT
+        window.location.href = `/adduser.html?id=${id}`;
+        const myForm = document.querySelector('#form');
+        myForm.addEventListener('submit', async function (e) {
+          e.preventDefault();
+
+          const formData = new FormData(myForm);
+
+          await fetch("https://gorest.co.in//public/v2/users?access-token=835dc2e45b78886994de04f0235ccab1691464428e09811304972c0467d89473", {
 
 
+            method: "POST",
+
+            headers: {
+              "content-type": "application/json;json; charset=UTF-8",
+              "authorization": "Bearer token"
+
+            },
+            body: JSON.stringify(Object.fromEntries(formData)),
+
+          }).then(res => res.json())
+            .then(data => console.log(data))
+
+            .catch(error => console.log(error));
+          window.location.href = "userlist.html";
+        })
+      } else {
+        throw new Error("Failed to edit data");
+      }
+    })
+
+
+    .catch(error => {
+      console.error(error);
+    });
+
+
+
+}
+
+//search
 
 
 

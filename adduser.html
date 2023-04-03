@@ -14,35 +14,46 @@
 </head>
 
 <body>
+    <form id="form" class="m-5" action="#">
 
-    <form id="form" class="m-5" >
+
         <div class="row g-3">
+            
+               
             <div class="col-md-6">
                 <h1 class="fs-4"> Add user</h1>
             </div>
             <div class="col-md-6">
-                <button class="btn btn-primary  " id="back" type="submit" style="float: right;">Back</button>
+                <button class="btn btn-primary " id="back" type="submit" style="float: right;">Back</button>
             </div>
         </div>
         </div>
         <div class="container border m-5">
             <div class="row g-3">
-                <div class="col-md-6">
-                    <label for="validationCustom01" class="form-label mt-5"> Name</label>
-                    <input type="text" class="form-control " name="name" placeholder="name" style="width:400px"
+                <div class="col-md-4">
+                    <label for="validationCustom01" class="form-label mt-5">First Name</label>
+                    <input type="text" class="form-control " name="fname" placeholder="first name" style="width:400px"
                         required>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-4">
+                    <label for="validationCustom02" class="form-label mt-5">Last name</label>
+                    <input type="text" class="form-control" name="lname" placeholder="last name" style="width:400px"
+                        required>
+                </div>
+                <div class="col-md-4">
+                    <label for="validationCustom02" class="form-label mt-5">Full Name</label>
+                    <input type="text" class="form-control" name="name" placeholder="full name" style="width:400px"
+                        required>
+                </div>
+
+            </div>
+            <div class="row g-3">
+                <div class="col-md-4">
                     <label for="validationCustom02" class="form-label mt-5">Email</label>
                     <input type="text" class="form-control" name="email" placeholder="email" style="width:400px"
                         required>
                 </div>
-                
-                
-            </div>
-            <div class="row g-3">
-
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <label for="validationCustom04" class="form-label mt-5">Gender</label>
                     <select class="form-select" name="gender" style="width:400px" required>
                         <option selected disabled value="">Choose...</option>
@@ -50,12 +61,13 @@
                         <option>male</option>
                     </select>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <label for="validationCustom05" class="form-label mt-5">Status</label>
-                    <input type="text" class="form-control" name="Status" style="width:400px" required>
+                    <input type="text" class="form-control" name="status" style="width:400px" required>
                 </div>
                 <div class="col-12">
-                    <button class="btn btn-primary mt-5 m-3 " type="submit" style="float: right;" id="submit">Add
+                    <button class="btn btn-primary mt-5 m-3 " type="submit" value="submit" style="float: right;"
+                        id="submit">Add
                         Parameter</button>
                 </div>
             </div>
