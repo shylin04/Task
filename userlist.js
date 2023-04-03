@@ -45,9 +45,9 @@ fetch("https://gorest.co.in//public/v2/users?access-token=835dc2e45b78886994de04
 
 //delete
 
-function onDelete(tr) {
+function onDelete(td) {
 
-  const id = tr.parentElement.parentElement.id;
+  const id = td.parentElement.parentElement.id;
   console.log(id);
 
   fetch(`https://gorest.co.in//public/v2/users/${id}`, {
@@ -70,7 +70,7 @@ function onDelete(tr) {
     .catch(error => {
       console.error(error);
     });
-  document.getElementById("table-body").deleteRow(tr.parentElement.parentElement.rowIndex);
+  document.getElementById("table-body").deleteRow(td.parentElement.parentElement.rowIndex);
 
   }
 
