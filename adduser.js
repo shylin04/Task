@@ -8,11 +8,6 @@ myForm.addEventListener('submit', async function (e) {
     e.preventDefault();
 
     const formData = new FormData(myForm);
-    //const searchParams = new URLSearchParams(formData);
-    //for (const item of formData) {
-    //  console.log(item[0], item[1]);
-
-    //}
 
     //console.log(Object.fromEntries(formData));
 
@@ -28,11 +23,13 @@ myForm.addEventListener('submit', async function (e) {
         },
         body: JSON.stringify(Object.fromEntries(formData)),
 
+
+
     }).then(res => res.json())
         .then(data => console.log(data))
-         
+
         .catch(error => console.log(error));
-        window.location.href = "userlist.html";
+    window.location.href = "userlist.html";
 })
 
 
