@@ -17,10 +17,10 @@ fetch("https://gorest.co.in//public/v2/users?access-token=835dc2e45b78886994de04
   }).then((data) => {
     let tableData = "";
     data.map((values) => {
-      tableData += `<tr id="${values.id}" >
+      tableData += `<tr id="${values.id}">
        <td>${values.name}</td>
        <td>${values.id}</td>
-       <td id="id1">${values.gender}</td>
+       <td>${values.gender}</td>
        <td>${values.email}</td>
        <td>${values.status}</td>
 
@@ -58,7 +58,8 @@ function onDelete(td) {
   })
     .then(response => {
       if (response.ok) {
-        alert(" userlist deleted successfully");
+        console.log(response);
+        // alert(" userlist deleted successfully");
       } else {
         throw new Error("Failed to delete data.");
       }
@@ -74,7 +75,7 @@ function onDelete(td) {
 //edit
 function onEdit(td) {
   const id = td.parentElement.parentElement.id;
-  
+
 
 
   fetch(`https://gorest.co.in//public/v2/users/${id}`, {
@@ -90,7 +91,7 @@ function onEdit(td) {
     .then(response => {
       if (response.ok) {
 
-        alert("edit the userlist details");
+        alert("edit the user details");
         window.location.href = `/adduser.html?id=${id}`;
 
       } else {
@@ -112,60 +113,134 @@ function onEdit(td) {
 
 //search
 
-const searchInput = document.querySelector('#search');
-const searchElement = document.getElementById('id1');
+fetch(`https://gorest.co.in//public/v2/users?page=1&per_page=20/gender={male,female}`,{
 
-const gender = searchElement.innerText;
-console.log(gender);
+    headers: {
+      "content-type": "application/json;json; charset=UTF-8",
+      "authorization": "Bearer 835dc2e45b78886994de04f0235ccab1691464428e09811304972c0467d89473"
 
-
-searchInput.addEventListener('input' , () => {
-
-  const displayList= tableData.filter(()=>{
-    if(searchInput.gender==='male'){
- return filterRowsByGender(gender); 
-
-
-    }if(searchInput.gender==='male'){
-     return filterRowsByGender(gender); 
-    
-    }else{
-        return false;
     }
 })
+  .then(response => response.json())
+  .then(response => {
+    data = response;
+    //console.log(data);
+  })
+  .catch(error => console.log(error));
 
-function filterRowsByGender(gender) {
-  const tableBody = document.getElementById('table-body');
-  const rows = tableBody.getElementsByTagName('tr');
+  let filteredData=[]; //take filtered array
+  const searchInput = document.querySelector('#search');
 
-  for (let i = 0; i < rows.length; i++) {
-    const row = rows[i];
-    const genderCell = row.getElementsByTagName('td')[2]; // assuming gender is in the 3rd column
+searchInput.addEventListener('input', () => {
+let search=searchInput.value.toLowerCase()
+  
+let filteredData = data.filter((row) => {
+    return row.gender.toLowerCase() === searchInput;
+  });
+  console.log(filteredData);
+});
 
-    if (genderCell.innerText.toLowerCase() !== gender.toLowerCase()) {
-      row.style.display = 'none';
-    } else {
-      row.style.display = '';
+ 
+
+
+
+
+
+
+
+
+
+
+//pagination
+
+//fetch the api data and store it in a variable
+let data = [];
+
+fetch(`https://gorest.co.in//public/v2/users?page=1&per_page=20`,
+  {
+
+    headers: {
+      "content-type": "application/json;json; charset=UTF-8",
+      "authorization": "Bearer 835dc2e45b78886994de04f0235ccab1691464428e09811304972c0467d89473"
+
     }
+  }).then(response => response.json())
+  .then(response => {
+    data = response;
+    //console.log(data);
+  })
+  .catch(error => console.log(error));
+
+
+const itemsPerPage = 10;
+let currentPage = 1;
+
+
+//display the table data  based on itemsperpage ,currentpage
+function displayTableData() {
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const tableBody = document.getElementById('table-body');
+  let tableData = '';
+
+  for (let i = startIndex; i < endIndex && i < data.length; i++) {
+    tableData += `<tr>
+                    <td>${data[i].name}</td>
+                    <td>${data[i].id}</td>
+                    <td>${data[i].gender}</td>
+                    <td>${data[i].email}</td>
+                    <td>${data[i].status}</td>
+                    <td>
+      <a id="view" onclick="onView(this)" style="color:blue;" ><i class="fa-solid fa-eye"></i></a>
+      <a id="edit" onclick="onEdit(this)" style="padding-left:15px;color:blue;"> <i class="fa-solid fa-pen"></i></a>
+      <a id="delete" onclick="onDelete(this)" style="padding-left:15px ;color:red;"><i class="fa-solid fa-trash"></i></a></td>
+                  </tr>`;
   }
+
+  tableBody.innerHTML = tableData;
 }
 
 
+// these 2 functions to handle the previos and nextpage
+function goToPreviousPage() {
+  if (currentPage > 1) {
+    currentPage--;
+    displayTableData();
+
+  }
+}
+
+function goToNextPage() {
+  if (currentPage < Math.ceil(data.length / itemsPerPage)) {
+    currentPage++;
+    displayTableData();
+
+  }
+}
+// add eventlisteners to prev and next buttons
+const previousButton = document.getElementById('prevbutton');
+const nextButton = document.getElementById('nextbutton');
+
+prevbutton.addEventListener('click', goToPreviousPage);
+nextbutton.addEventListener('click', goToNextPage);
 
 
- fetch(`https://gorest.co.in//public/v2/users?gender={male,female}`,{
-  headers: {
-    "content-type": "application/json;json; charset=UTF-8",
-    "authorization": "Bearer 835dc2e45b78886994de04f0235ccab1691464428e09811304972c0467d89473"
+// show entries dropdown
+const showEntriesDropdown = document.querySelector('#show-entries');
 
-  },
-  body:JSON.stringify(displayList)
-
- }).then(response => response.json())
- .then(data => console.log(data))
-
-.catch(error => console.error(error));
- })
+showEntriesDropdown.addEventListener('change', function () {
+  const selectedValue = this.value;
+  updateEntriesShown(selectedValue);
+});
 
 
-
+function updateEntriesShown(numEntries) {
+  const tableRows = document.querySelectorAll('tr'); // assuming you're using a table
+  for (let i = 0; i < tableRows.length; i++) {
+    if (i < numEntries) {
+      tableRows[i].style.display = 'table-row';
+    } else {
+      tableRows[i].style.display = 'none';
+    }
+  }
+}
