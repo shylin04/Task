@@ -11,7 +11,7 @@ myForm.addEventListener('submit', async function (e) {
 
     //console.log(Object.fromEntries(formData));
 
-    await fetch("https://gorest.co.in//public/v2/users?access-token=835dc2e45b78886994de04f0235ccab1691464428e09811304972c0467d89473", {
+    await fetch("https://gorest.co.in/public/v2/users?access-token=835dc2e45b78886994de04f0235ccab1691464428e09811304972c0467d89473", {
 
 
         method: "POST",
@@ -29,8 +29,9 @@ myForm.addEventListener('submit', async function (e) {
         .then(data => console.log(data))
 
         .catch(error => console.log(error));
-    window.location.href = "userlist.html";
+    //window.location.href = "userlist.html";
 })
+
 
 
 

@@ -4,7 +4,7 @@ document.getElementById("add-user").addEventListener("click", () => {
 
 // users list
 fetch("https://gorest.co.in//public/v2/users?access-token=835dc2e45b78886994de04f0235ccab1691464428e09811304972c0467d89473", {
-  method: 'GET',
+
   headers: {
     "content-type": "application/json;json; charset=UTF-8",
     "Authorization": "Bearer token",
@@ -24,12 +24,10 @@ fetch("https://gorest.co.in//public/v2/users?access-token=835dc2e45b78886994de04
        <td>${values.email}</td>
        <td>${values.status}</td>
 
-       
-     
-      <td>
-      <a id="view" onclick="onView(this)" style="color:blue;" ><i class="fa-solid fa-eye"></i></a>
-      <a id="edit" onclick="onEdit(this)" style="padding-left:15px;color:blue;"> <i class="fa-solid fa-pen"></i></a>
-      <a id="delete" onclick="onDelete(this)" style="padding-left:15px ;color:red;"><i class="fa-solid fa-trash"></i></a></td>
+       <td>
+      <a id="view" onclick="onView(${values.id})" style="color:blue;" ><i class="fa-solid fa-eye"></i></a>
+      <a id="edit" onclick="onEdit(${values.id})" style="padding-left:15px;color:blue;"> <i class="fa-solid fa-pen"></i></a>
+      <a id="delete" onclick="onDelete(${values.id})" style="padding-left:15px ;color:red;"><i class="fa-solid fa-trash"></i></a></td>
      </tr>`;
     });
     const tableBody = document.getElementById("table-body");
@@ -38,80 +36,63 @@ fetch("https://gorest.co.in//public/v2/users?access-token=835dc2e45b78886994de04
   })
 
 
+//view 
+
+function onView(id) {
+  // Store the user ID in session storage
+  sessionStorage.setItem('userId', id);
+
+  // Redirect to the edit page with the ID in the query string
+  window.location.href = `/view.html?id=${id}`;
+
+}
+
 //delete
 
-function onDelete(td) {
-
-  const id = td.parentElement.parentElement.id;
+function onDelete(id) {
   console.log(id);
-
-  fetch(`https://gorest.co.in//public/v2/users/${id}`, {
+  fetch(`https://gorest.co.in/public/v2/users/${id}`, {
     method: "DELETE",
-
     headers: {
       "content-type": "application/json;json; charset=UTF-8",
       "authorization": "Bearer 835dc2e45b78886994de04f0235ccab1691464428e09811304972c0467d89473"
-
     }
   })
     .then(response => {
       if (response.ok) {
-        console.log(response);
-        // alert(" userlist deleted successfully");
+
+        const tableBody = document.getElementById("table-body");
+        const rowIndex = document.getElementById(id).rowIndex;
+
+        tableBody.deleteRow(rowIndex);
+        //alert(" userlist deleted successfully");
+
       } else {
         throw new Error("Failed to delete data.");
       }
     })
-
     .catch(error => {
       console.error(error);
     });
-  document.getElementById("table-body").deleteRow(td.parentElement.parentElement.rowIndex);
-
 }
 
 
 //edit
-function onEdit(td) {
-  const id = td.parentElement.parentElement.id;
+function onEdit(id) {
+  // Store the user ID in session storage
+  sessionStorage.setItem('userId', id);
 
-
-
-  fetch(`https://gorest.co.in//public/v2/users/${id}`, {
-    method: "PUT",
-    headers: {
-      "content-type": "application/json;json; charset=UTF-8",
-      "authorization": "Bearer 835dc2e45b78886994de04f0235ccab1691464428e09811304972c0467d89473"
-
-    },
-    body: JSON.stringify(),
-
-  })
-    .then(response => {
-      if (response.ok) {
-
-        alert("edit the user details");
-        window.location.href = `/adduser.html?id=${id}`;
-
-      } else {
-        throw new Error("Failed to edit data");
-      }
-    })
-
-
-    .catch(error => {
-      console.error(error);
-    });
-
-
+  // Redirect to the edit page with the ID in the query string
+  window.location.href = `/edit.html?id=${id}`;
 
 }
+
 
 
 //search
 
 let data;
-fetch(`https://gorest.co.in//public/v2/users?page=1&per_page=20/gender={male,female}`, {
+fetch(`https://gorest.co.in/public/v2/users?page=1&per_page=20`, {
 
   headers: {
     "content-type": "application/json;json; charset=UTF-8",
@@ -128,31 +109,33 @@ fetch(`https://gorest.co.in//public/v2/users?page=1&per_page=20/gender={male,fem
 const tableBody = document.querySelector('#table-body');
 const searchInput = document.querySelector('#search');
 
-  searchInput.addEventListener('input', () => {
+searchInput.addEventListener('input', () => {
   let search = searchInput.value.toLowerCase()
   //console.log(search);
 
   let filteredData = data.filter((row) => {
 
-    return row.gender.toLowerCase() === search;
+    return row.gender.toLowerCase().includes(search) ||
+      row.name.toLowerCase().includes(search) ||
+      row.id.toString().includes(search);
 
   });
 
-  // console.log(filteredData);
+  //console.log(filteredData);
 
   tableBody.innerHTML = '';
   let tableData = "";
-  filteredData.forEach((row) => {
-    tableData += `<tr id="${row.id}">
-       <td>${row.name}</td>
-       <td>${row.id}</td>
-       <td>${row.gender}</td>
-       <td>${row.email}</td>
-       <td>${row.status}</td>
+  filteredData.forEach((values) => {
+    tableData += `<tr id="${values.id}">
+       <td>${values.name}</td>
+       <td>${values.id}</td>
+       <td>${values.gender}</td>
+       <td>${values.email}</td>
+       <td>${values.status}</td>
       <td>
-      <a id="view" onclick="onView(this)" style="color:blue;" ><i class="fa-solid fa-eye"></i></a>
-      <a id="edit" onclick="onEdit(this)" style="padding-left:15px;color:blue;"> <i class="fa-solid fa-pen"></i></a>
-      <a id="delete" onclick="onDelete(this)" style="padding-left:15px ;color:red;"><i class="fa-solid fa-trash"></i></a></td>
+      <a id="view" onclick="onView(${values.id})" style="color:blue;" ><i class="fa-solid fa-eye"></i></a>
+      <a id="edit" onclick="onEdit(${values.id})" style="padding-left:15px;color:blue;"> <i class="fa-solid fa-pen"></i></a>
+      <a id="delete" onclick="onDelete(${values.id})" style="padding-left:15px ;color:red;"><i class="fa-solid fa-trash"></i></a></td>
      </tr>`;
   });
 
@@ -168,7 +151,7 @@ const searchInput = document.querySelector('#search');
 
 //pagination
 
-fetch(`https://gorest.co.in//public/v2/users?page=1&per_page=20`,
+fetch(`https://gorest.co.in/public/v2/users?page=1&per_page=20`,
   {
 
     headers: {
@@ -178,7 +161,7 @@ fetch(`https://gorest.co.in//public/v2/users?page=1&per_page=20`,
     }
   }).then(response => response.json())
   .then(response => {
-    data = response;
+    values = response;
     //console.log(data);
   })
   .catch(error => console.log(error));
@@ -195,17 +178,17 @@ function displayTableData() {
   const tableBody = document.getElementById('table-body');
   let tableData = '';
 
-  for (let i = startIndex; i < endIndex && i < data.length; i++) {
+  for (let i = startIndex; i < endIndex && i < values.length; i++) {
     tableData += `<tr>
-                    <td>${data[i].name}</td>
-                    <td>${data[i].id}</td>
-                    <td>${data[i].gender}</td>
-                    <td>${data[i].email}</td>
-                    <td>${data[i].status}</td>
+                    <td>${values[i].name}</td>
+                    <td>${values[i].id}</td>
+                    <td>${values[i].gender}</td>
+                    <td>${values[i].email}</td>
+                    <td>${values[i].status}</td>
                     <td>
-      <a id="view" onclick="onView(this)" style="color:blue;" ><i class="fa-solid fa-eye"></i></a>
-      <a id="edit" onclick="onEdit(this)" style="padding-left:15px;color:blue;"> <i class="fa-solid fa-pen"></i></a>
-      <a id="delete" onclick="onDelete(this)" style="padding-left:15px ;color:red;"><i class="fa-solid fa-trash"></i></a></td>
+      <a id="view" onclick="onView(${values[i].id})" style="color:blue;" ><i class="fa-solid fa-eye"></i></a>
+      <a id="edit" onclick="onEdit(${values[i].id})" style="padding-left:15px;color:blue;"> <i class="fa-solid fa-pen"></i></a>
+      <a id="delete" onclick="onDelete(${values[i].id})" style="padding-left:15px ;color:red;"><i class="fa-solid fa-trash"></i></a></td>
                   </tr>`;
   }
 
