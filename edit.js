@@ -1,6 +1,7 @@
 document.getElementById("back").addEventListener("click", () => {
   window.location.href = "userlist.html";
 });
+
 const editForm = document.querySelector('#form');
 
 // Get the user ID from session storage

@@ -20,9 +20,9 @@
     <button type="submit" class="btn btn-primary float-end mb-3 " id="add-user" style="width:100px">Add
       user</button>
     <input class="search-input mt-2 m-3" id="search" type="search" placeholder="search" style="float: right">
-    <!-- <label  class="search mt-4 fs-7"style="float: right">search:</label> -->
+    <label  class="search mt-3 fs-7"style="float: right">Search:</label>
     <label for="show-entries">Show entries:</label>
-    <select id="show-entries">
+    <select name="showEntries" id="show-entries">
       <option value="10">10</option>
       <option value="15">15</option>
       <option value="20">20</option>
@@ -44,7 +44,7 @@
 
       </tbody>
     </table>
-    <p>showing 1 to 10 of 20 entries</p>
+    <p id="showEntries">showing 1 to 10 of 20 entries</p>
 
     <nav class="pagination float-end ">
       <li class="page-item ">

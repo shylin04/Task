@@ -25,9 +25,9 @@ fetch("https://gorest.co.in//public/v2/users?access-token=835dc2e45b78886994de04
        <td>${values.status}</td>
 
        <td>
-      <a id="view" onclick="onView(${values.id})" style="color:blue;" ><i class="fa-solid fa-eye"></i></a>
-      <a id="edit" onclick="onEdit(${values.id})" style="padding-left:15px;color:blue;"> <i class="fa-solid fa-pen"></i></a>
-      <a id="delete" onclick="onDelete(${values.id})" style="padding-left:15px ;color:red;"><i class="fa-solid fa-trash"></i></a></td>
+      <a  onclick="onView(${values.id})" style="color:blue;" ><i class="fa-solid fa-eye"></i></a>
+      <a  onclick="onEdit(${values.id})" style="padding-left:15px;color:blue;"> <i class="fa-solid fa-pen"></i></a>
+      <a  onclick="onDelete(${values.id})" style="padding-left:15px ;color:red;"><i class="fa-solid fa-trash"></i></a></td>
      </tr>`;
     });
     const tableBody = document.getElementById("table-body");
@@ -50,6 +50,7 @@ function onView(id) {
 //delete
 
 function onDelete(id) {
+
   console.log(id);
   fetch(`https://gorest.co.in/public/v2/users/${id}`, {
     method: "DELETE",
@@ -60,10 +61,10 @@ function onDelete(id) {
   })
     .then(response => {
       if (response.ok) {
-
         const tableBody = document.getElementById("table-body");
-        const rowIndex = document.getElementById(id).rowIndex;
 
+        const rowIndex = document.getElementById(id).rowIndex;
+        // console.log(rowIndex);
         tableBody.deleteRow(rowIndex);
         //alert(" userlist deleted successfully");
 
@@ -71,9 +72,6 @@ function onDelete(id) {
         throw new Error("Failed to delete data.");
       }
     })
-    .catch(error => {
-      console.error(error);
-    });
 }
 
 
@@ -133,21 +131,15 @@ searchInput.addEventListener('input', () => {
        <td>${values.email}</td>
        <td>${values.status}</td>
       <td>
-      <a id="view" onclick="onView(${values.id})" style="color:blue;" ><i class="fa-solid fa-eye"></i></a>
-      <a id="edit" onclick="onEdit(${values.id})" style="padding-left:15px;color:blue;"> <i class="fa-solid fa-pen"></i></a>
-      <a id="delete" onclick="onDelete(${values.id})" style="padding-left:15px ;color:red;"><i class="fa-solid fa-trash"></i></a></td>
+      <a  onclick="onView(${values.id})" style="color:blue;" ><i class="fa-solid fa-eye"></i></a>
+      <a  onclick="onEdit(${values.id})" style="padding-left:15px;color:blue;"> <i class="fa-solid fa-pen"></i></a>
+      <a  onclick="onDelete(${values.id})" style="padding-left:15px ;color:red;"><i class="fa-solid fa-trash"></i></a></td>
      </tr>`;
   });
 
   tableBody.innerHTML = tableData;
 
 })
-
-
-
-
-
-
 
 //pagination
 
@@ -167,7 +159,7 @@ fetch(`https://gorest.co.in/public/v2/users?page=1&per_page=20`,
   .catch(error => console.log(error));
 
 
-const itemsPerPage = 10;
+let itemsPerPage = 10;
 let currentPage = 1;
 
 
@@ -179,7 +171,7 @@ function displayTableData() {
   let tableData = '';
 
   for (let i = startIndex; i < endIndex && i < values.length; i++) {
-    tableData += `<tr>
+    tableData += `<tr id="${values[i].id}">
                     <td>${values[i].name}</td>
                     <td>${values[i].id}</td>
                     <td>${values[i].gender}</td>
@@ -193,6 +185,7 @@ function displayTableData() {
   }
 
   tableBody.innerHTML = tableData;
+  displayEntriesInfo();
 }
 
 
@@ -206,7 +199,7 @@ function goToPreviousPage() {
 }
 
 function goToNextPage() {
-  if (currentPage < Math.ceil(data.length / itemsPerPage)) {
+  if (currentPage < Math.ceil(values.length / itemsPerPage)) {
     currentPage++;
     displayTableData();
 
@@ -227,6 +220,22 @@ showEntriesDropdown.addEventListener('change', function () {
   const selectedValue = this.value;
   showEntries(selectedValue);
 });
+
+//function to show entries
+function showEntries(numEntries) {
+  itemsPerPage = numEntries;
+  currentPage = 1;
+  displayTableData();
+}
+
+const entriesInfo = document.getElementById('showEntries');
+
+function displayEntriesInfo() {
+  const startIndex = (currentPage - 1) * itemsPerPage + 1;
+  const endIndex = Math.min(startIndex + itemsPerPage - 1, values.length);
+  entriesInfo.textContent = `Showing ${startIndex} to ${endIndex} of ${values.length} entries`;
+}
+
 
 
 
